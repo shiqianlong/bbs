@@ -18,3 +18,7 @@ shortuuid==1.0.8
 SQLAlchemy==1.4.31
 Werkzeug==2.0.2
 zipp==3.7.0
+celery
+redis
+# celery 在win中运行时需要安装的库
+gevent
