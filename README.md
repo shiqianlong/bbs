@@ -5,5 +5,10 @@
 4. 运行迁移脚本：flask update
 
 ## celery使用
+`pip install celery,gevent,redis
+`
 - win下使用：`celery -A app.mycelery worker --loglevel=info -P gevent`
 - Linux下使用：`celery -A app.mycelery worker --loglevel=info`
+
+## CSRF攻击防御
+`pip install flask-wtf`

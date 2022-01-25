@@ -34,7 +34,7 @@ def email_captcha():
     subject = '【子午】注册验证码'
     body = '【子午】您的验证码是：%s' % captcha
     # 使用celery异步发送邮件
-    current_app.celery.send_task('send_mail', (email, subject, body))
+    # current_app.celery.send_task('send_mail', (email, subject, body))
     cache.set(email, captcha)
 
     return restful.ok()
