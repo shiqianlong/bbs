@@ -22,3 +22,5 @@ celery
 redis
 # celery 在win中运行时需要安装的库
 gevent
+# flask缓存
+flask-caching

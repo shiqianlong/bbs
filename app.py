@@ -1,7 +1,7 @@
 import config
 from flask import Flask
 from flask_migrate import Migrate
-from exts import db, mail
+from exts import db, mail, cache
 # 导入模型关联APP
 from models import auth
 from apps.front import front_bp
@@ -12,6 +12,8 @@ app.config.from_object(config)
 
 db.init_app(app)
 mail.init_app(app)
+cache.init_app(app)
+
 mycelery = make_celery(app)
 
 migrate = Migrate(app, db)

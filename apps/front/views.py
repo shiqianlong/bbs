@@ -10,7 +10,7 @@ from flask import (
     current_app
 )
 from flask_mail import Message
-from exts import mail
+from exts import mail, cache
 
 bp = Blueprint('front', __name__, url_prefix='/')
 
@@ -35,6 +35,7 @@ def email_captcha():
     body = '【子午】您的验证码是：%s' % captcha
     # 使用celery异步发送邮件
     current_app.celery.send_task('send_mail', (email, subject, body))
+    cache.set(email, captcha)
 
     return jsonify({'code': 200, 'message': '邮件发送成功！'})
 
