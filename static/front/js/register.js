@@ -1,6 +1,15 @@
 var RegisterHandle = function () {
 
 };
+RegisterHandle.prototype.listenGraphCaptchaEvent = function () {
+    $('#captcha-img').on('click', function () {
+        var $this = $(this);
+        var src = $this.attr('src');
+        var new_src = src + '?sign=' + Math.random();
+        $this.attr('src', new_src)
+    })
+};
+
 
 RegisterHandle.prototype.listenSendCaptchaEvent = function () {
     var callback = function (event) {
@@ -39,7 +48,8 @@ RegisterHandle.prototype.listenSendCaptchaEvent = function () {
 };
 
 RegisterHandle.prototype.run = function () {
-    this.listenSendCaptchaEvent()
+    this.listenSendCaptchaEvent();
+    this.listenGraphCaptchaEvent()
 };
 
 $(function () {
