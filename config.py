@@ -5,6 +5,10 @@
 使用时请先配置pw文件中的相关密码信息
 '''
 import pw
+import os
+
+# 本文件所在的文件夹
+BASE_DIR = os.path.dirname(__file__)
 
 DB_USERNAME = 'root'
 DB_PASSWORD = 'root'

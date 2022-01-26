@@ -24,3 +24,4 @@ redis
 gevent
 # flask缓存
 flask-caching
+pillow

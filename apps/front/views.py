@@ -2,17 +2,35 @@
 # FileName  : views.py
 # Author    : shiqianlong
 import string, random
+from io import BytesIO
+from hashlib import md5
 from flask import (
     Blueprint,
     request,
     render_template,
-    current_app
+    current_app,
+    make_response
 )
 from flask_mail import Message
 from exts import mail, cache
 from utils import restful
+from utils.captcha import Captcha
 
 bp = Blueprint('front', __name__, url_prefix='/')
+
+
+@bp.route('/graph/captcha')
+def graph_captcha():
+    captcha, image = Captcha.gene_graph_captcha()
+    # 生成一个验证码对应的key放入cookie中
+    key = md5(captcha.encode('utf-8')).hexdigest()
+    out = BytesIO()
+    image.save(out, 'png')
+    out.seek(0)
+    resp = make_response(out.read())
+    resp.content_type = 'image/png'
+    resp.set_cookie('_graph_captcha_key', key, max_age=3600)
+    return resp
 
 
 @bp.get('/email/captcha')
