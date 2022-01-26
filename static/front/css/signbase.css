@@ -12,8 +12,9 @@ body{
     padding-top: 40px;
 }
 .logo-box img{
-    width: 60px;
-    height:60px;
+    width: 78px;
+    height:85px;
+    border-radius: 5px;
 }
 .page-title{
     text-align: center;

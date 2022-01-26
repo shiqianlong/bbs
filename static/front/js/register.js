@@ -1,6 +1,37 @@
 var RegisterHandle = function () {
 
 };
+
+RegisterHandle.prototype.listensubmitEvent = function () {
+    $('#submit-btn').on('click', function (event) {
+        event.preventDefault();
+        var email = $("input[name='email']").val();
+        var email_captcha = $("input[name='email-captcha']").val();
+        var username = $("input[name='username']").val();
+        var password = $("input[name='password']").val();
+        var repeat_password = $("input[name='repeat-password']").val();
+        var graph_captcha = $("input[name='graph-captcha']").val();
+        zlajax.post({
+            url: '/register',
+            data: {
+                email,
+                email_captcha,
+                username,
+                password,
+                repeat_password,
+                graph_captcha
+            },
+            success: function (result) {
+                if (result['code'] == 200) {
+                    window.location = '/login'
+                } else {
+                    alert(result['message'])
+                }
+            }
+        })
+    })
+};
+
 RegisterHandle.prototype.listenGraphCaptchaEvent = function () {
     $('#captcha-img').on('click', function () {
         var $this = $(this);
@@ -49,7 +80,8 @@ RegisterHandle.prototype.listenSendCaptchaEvent = function () {
 
 RegisterHandle.prototype.run = function () {
     this.listenSendCaptchaEvent();
-    this.listenGraphCaptchaEvent()
+    this.listenGraphCaptchaEvent();
+    this.listensubmitEvent();
 };
 
 $(function () {
