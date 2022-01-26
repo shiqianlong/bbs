@@ -25,3 +25,4 @@ gevent
 # flask缓存
 flask-caching
 pillow
+email_validator

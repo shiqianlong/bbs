@@ -12,9 +12,11 @@ from flask import (
     make_response
 )
 from flask_mail import Message
-from exts import mail, cache
+from exts import mail, cache, db
 from utils import restful
 from utils.captcha import Captcha
+from .forms import RegisterForm
+from models.auth import UserModel
 
 bp = Blueprint('front', __name__, url_prefix='/')
 
@@ -30,6 +32,7 @@ def graph_captcha():
     resp = make_response(out.read())
     resp.content_type = 'image/png'
     resp.set_cookie('_graph_captcha_key', key, max_age=3600)
+    cache.set(key, captcha)
     return resp
 
 
@@ -54,7 +57,7 @@ def email_captcha():
     # 使用celery异步发送邮件
     # current_app.celery.send_task('send_mail', (email, subject, body))
     cache.set(email, captcha)
-
+    print(captcha)
     return restful.ok()
 
 
@@ -68,3 +71,15 @@ def login():
 def register():
     if request.method == 'GET':
         return render_template('front/register.html')
+    else:
+        form = RegisterForm(request.form)
+        if form.validate():
+            email = form.email.data
+            username = form.username.data
+            password = form.password.data
+            user = UserModel(email=email, username=username, password=password)
+            db.session.add(user)
+            db.session.commit()
+            return restful.ok()
+        else:
+            return restful.params_error(form.messages[0])
