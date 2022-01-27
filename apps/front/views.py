@@ -22,6 +22,11 @@ from models.auth import UserModel
 bp = Blueprint('front', __name__, url_prefix='/')
 
 
+@bp.route('/')
+def index():
+    return render_template('front/index.html')
+
+
 @bp.route('/graph/captcha')
 def graph_captcha():
     captcha, image = Captcha.gene_graph_captcha()

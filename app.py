@@ -22,11 +22,5 @@ migrate = Migrate(app, db)
 # 注册蓝图
 app.register_blueprint(front_bp)
 
-
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
-
 if __name__ == '__main__':
     app.run()
