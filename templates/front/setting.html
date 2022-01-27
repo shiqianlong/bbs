@@ -27,12 +27,12 @@
 
 {% block body %}
     <div class="setting-group">
-        <h1>张三设置</h1>
+        <h1>{{ user.username }}设置</h1>
         <div style="height: 20px;"></div>
         <form>
             <div class="form-group">
                 <label for="exampleInputEmail1">邮箱：</label>
-                <input type="email" class="form-control" value="hynever@qq.com" readonly>
+                <input type="email" class="form-control" value="{{ user.email }}" readonly>
             </div>
             <div class="form-group">
                 <label>头像：</label>
@@ -42,12 +42,8 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="exampleInputPassword1">真实姓名：</label>
-                <input type="text" class="form-control" id="realname-input" value="">
-            </div>
-            <div class="form-group">
                 <label for="exampleInputPassword1">个性签名：</label>
-                <input type="text" class="form-control" id="signagure-input" value="">
+                <input type="text" class="form-control" id="signagure-input" value="{{ user.signature or '' }}">
             </div>
             <button type="submit" id="submit-btn" class="btn btn-primary">保存</button>
         </form>
