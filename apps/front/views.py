@@ -10,7 +10,8 @@ from flask import (
     render_template,
     current_app,
     make_response,
-    session
+    session,
+    redirect
 )
 from flask_mail import Message
 from exts import mail, cache, db
@@ -20,6 +21,13 @@ from .forms import RegisterForm, LoginForm
 from models.auth import UserModel
 
 bp = Blueprint('front', __name__, url_prefix='/')
+
+
+@bp.route('/logout')
+def logout():
+    # 用户退出
+    session.clear()
+    return redirect('/')
 
 
 @bp.route('/')
