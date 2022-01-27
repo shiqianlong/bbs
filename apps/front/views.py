@@ -9,13 +9,14 @@ from flask import (
     request,
     render_template,
     current_app,
-    make_response
+    make_response,
+    session
 )
 from flask_mail import Message
 from exts import mail, cache, db
 from utils import restful
 from utils.captcha import Captcha
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
 from models.auth import UserModel
 
 bp = Blueprint('front', __name__, url_prefix='/')
@@ -65,6 +66,24 @@ def email_captcha():
 def login():
     if request.method == 'GET':
         return render_template('front/login.html')
+    else:
+        form = LoginForm(request.form)
+        if form.validate():
+            email = form.email.data
+            password = form.password.data
+            remember = form.remember.data
+            user = UserModel.query.filter_by(email=email).first()
+            if not user:
+                return restful.params_error(message='该邮箱未注册')
+            if not user.check_password(password):
+                return restful.params_error(message='邮箱或密码错误')
+            if not user.is_active:
+                return restful.params_error(message='该账号已封存，请联系管理员')
+            if remember == 1:
+                session.permanent = True
+            return restful.ok()
+        else:
+            return restful.permission_error(message=form.messages[0])
 
 
 @bp.route('/register', methods=['GET', 'POST'])

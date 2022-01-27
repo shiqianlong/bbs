@@ -3,7 +3,7 @@
 # Author    : shiqianlong
 from wtforms import Form, ValidationError
 from wtforms.validators import Email, Length, EqualTo
-from wtforms.fields import StringField
+from wtforms.fields import StringField, IntegerField
 from flask import request
 from models.auth import UserModel
 from exts import cache
@@ -17,6 +17,12 @@ class BaseForm(Form):
             for errors in self.errors.values():
                 message_list.extend(errors)
         return message_list
+
+
+class LoginForm(BaseForm):
+    email = StringField(validators=[Email(message='请输入正确格式邮箱！')])
+    password = StringField(validators=[Length(6, 20, message='请输入正确格式密码！')])
+    remember = IntegerField()
 
 
 class RegisterForm(BaseForm):

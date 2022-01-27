@@ -6,6 +6,10 @@
 '''
 import pw
 import os
+from datetime import timedelta
+
+# session.permanent=True的情况下的过期时间
+PERMANENT_SESSION_LIFETIME = timedelta(days=30)
 
 # 本文件所在的文件夹
 BASE_DIR = os.path.dirname(__file__)
