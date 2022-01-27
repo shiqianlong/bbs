@@ -42,6 +42,11 @@ def front_content_process():
         return {}
 
 
+@bp.route('/setting')
+def setting():
+    return render_template('front/setting.html')
+
+
 @bp.route('/logout')
 def logout():
     # 用户退出
