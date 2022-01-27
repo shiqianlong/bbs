@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # FileName  : views.py
 # Author    : shiqianlong
-import string, random
+import string, random, time, os
 from io import BytesIO
 from hashlib import md5
 from flask import (
@@ -19,11 +19,28 @@ from flask_avatars import Identicon
 from exts import mail, cache, db
 from utils import restful
 from utils.captcha import Captcha
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, UploadImageForm
 from models.auth import UserModel
 from .decorators import login_required
 
 bp = Blueprint('front', __name__, url_prefix='/')
+
+
+@bp.post('/avatar/upload')
+@login_required
+def upload_avatar():
+    form = UploadImageForm(request.files)
+    if form.validate():
+        image = form.image.data
+        _, suffix_name = os.path.splitext(image.filename)
+        filename = md5((g.user.email + str(time.time())).encode('utf-8')).hexdigest() + suffix_name
+        image_path = os.path.join(current_app.config['AVATARS_SAVE_PATH'], filename)
+        image.save(image_path)
+        g.user.avatar = filename
+        db.session.commit()
+        return restful.ok(data={'avatar': filename})
+    else:
+        return restful.params_error(message=form.messages[0])
 
 
 @bp.before_request

@@ -3,8 +3,9 @@
 # Author    : shiqianlong
 from wtforms import Form, ValidationError
 from wtforms.validators import Email, Length, EqualTo
-from wtforms.fields import StringField, IntegerField
+from wtforms.fields import StringField, IntegerField, FileField
 from flask import request
+from flask_wtf.file import FileAllowed, FileSize
 from models.auth import UserModel
 from exts import cache
 
@@ -17,6 +18,11 @@ class BaseForm(Form):
             for errors in self.errors.values():
                 message_list.extend(errors)
         return message_list
+
+
+class UploadImageForm(BaseForm):
+    image = FileField(validators=[FileAllowed(['jpg', 'png', 'jpeg', ], message='图片格式不符合要求'),
+                                  FileSize(max_size=1024 * 1024 * 3, message='图片最大不能超过3M')])
 
 
 class LoginForm(BaseForm):
