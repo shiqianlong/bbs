@@ -11,7 +11,8 @@ from flask import (
     current_app,
     make_response,
     session,
-    redirect
+    redirect,
+    g
 )
 from flask_mail import Message
 from exts import mail, cache, db
@@ -21,6 +22,24 @@ from .forms import RegisterForm, LoginForm
 from models.auth import UserModel
 
 bp = Blueprint('front', __name__, url_prefix='/')
+
+
+@bp.before_request
+# 钩子方法，在进入视图前处理
+def front_before_request():
+    if 'user_id' in session:
+        user_id = session.get('user_id')
+        user = UserModel.query.get(user_id)
+        setattr(g, 'user', user)
+
+
+@bp.context_processor
+# 上下文处理器，视图层处理后经过这里
+def front_content_process():
+    if hasattr(g, 'user'):
+        return {'user': g.user}
+    else:
+        return {}
 
 
 @bp.route('/logout')
@@ -94,6 +113,7 @@ def login():
                 return restful.params_error(message='该账号已封存，请联系管理员')
             if remember == 1:
                 session.permanent = True
+            session['user_id'] = user.id
             return restful.ok()
         else:
             return restful.permission_error(message=form.messages[0])
