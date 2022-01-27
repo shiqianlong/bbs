@@ -52,3 +52,6 @@ CACHE_REDIS_DB = pw.CACHE_REDIS_DB
 
 # 密钥(自定义)
 SECRET_KEY = pw.SECRET_KEY
+
+# 头像配置
+AVATARS_SAVE_PATH = os.path.join(BASE_DIR, "media", "avatars")

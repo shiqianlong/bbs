@@ -37,7 +37,8 @@
             <div class="form-group">
                 <label>头像：</label>
                 <div class="input-group">
-                    <img src="../images/avatar.jpg" alt="..." class="img-circle" id="avatar-img">
+                    <img src="{{ url_for('media.get_avatar',filename=user.avatar) }}" alt="..." class="img-circle"
+                         id="avatar-img">
                     <input type="file" id="avatar-input" accept="image/jpeg, image/png">
                 </div>
             </div>

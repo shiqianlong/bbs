@@ -15,6 +15,7 @@ from flask import (
     g
 )
 from flask_mail import Message
+from flask_avatars import Identicon
 from exts import mail, cache, db
 from utils import restful
 from utils.captcha import Captcha
@@ -46,7 +47,9 @@ def front_content_process():
 @bp.route('/setting')
 @login_required
 def setting():
-    return render_template('front/setting.html')
+    # {{ avatars.gravatar(email_hash) }}
+    email_hash = md5((g.user.email).encode('utf-8')).hexdigest()
+    return render_template('front/setting.html', email_hash=email_hash)
 
 
 @bp.route('/logout')
@@ -136,7 +139,10 @@ def register():
             email = form.email.data
             username = form.username.data
             password = form.password.data
-            user = UserModel(email=email, username=username, password=password)
+            identicon = Identicon()
+            filenames = identicon.generate(text=md5(email.encode('utf-8')).hexdigest())
+            avatar = filenames[2]
+            user = UserModel(email=email, username=username, password=password, avatar=avatar)
             db.session.add(user)
             db.session.commit()
             return restful.ok()
