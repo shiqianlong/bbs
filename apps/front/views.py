@@ -20,6 +20,7 @@ from utils import restful
 from utils.captcha import Captcha
 from .forms import RegisterForm, LoginForm
 from models.auth import UserModel
+from .decorators import login_required
 
 bp = Blueprint('front', __name__, url_prefix='/')
 
@@ -43,6 +44,7 @@ def front_content_process():
 
 
 @bp.route('/setting')
+@login_required
 def setting():
     return render_template('front/setting.html')
 
