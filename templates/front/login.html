@@ -1,11 +1,11 @@
 {% extends 'front/base.html' %}
 
 {% block title %}
-    登录 - 知了论坛
+    登录 - 论坛
 {% endblock %}
 
 {% block head %}
-
+    <script src="{{ url_for('static',filename='front/js/login.js') }}"></script>
 {% endblock %}
 
 {% block body %}
@@ -16,7 +16,7 @@
             </a>
         </div>
         <h2 class="page-title">
-            知了传课-登录
+            论坛-登录
         </h2>
         <div class="sign-box">
             <div class="form-group">
