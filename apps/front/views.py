@@ -12,7 +12,9 @@ from flask import (
     make_response,
     session,
     redirect,
-    g
+    g,
+    jsonify,
+    url_for
 )
 from flask_mail import Message
 from flask_avatars import Identicon
@@ -183,8 +185,27 @@ def register():
 
 
 @bp.route('/post/public', methods=['GET', 'POST'])
+@login_required
 def public_post():
     # 发布贴子
     if request.method == 'GET':
         boards = BoardModel.query.order_by(BoardModel.priority.desc()).all()
         return render_template('front/public_post.html', boards=boards)
+
+
+@bp.post('/post/image/upload')
+@login_required
+def post_image_upload():
+    # 在富文本编辑器中上传图片
+    form = UploadImageForm(request.files)
+    if form.validate():
+        image = form.image.data
+        _, suffix_name = os.path.splitext(image.filename)
+        filename = md5((g.user.email + str(time.time())).encode('utf-8')).hexdigest() + suffix_name
+        image_path = os.path.join(current_app.config['POST_SAVE_PATH'], filename)
+        image.save(image_path)
+        return jsonify(
+            {"errno": 0,
+             'data': [{'url': url_for('media.get_post_image', filename=filename), 'alt': filename, 'href': ''}]})
+    else:
+        return restful.params_error(message=form.messages[0])

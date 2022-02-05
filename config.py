@@ -55,3 +55,6 @@ SECRET_KEY = pw.SECRET_KEY
 
 # 头像配置
 AVATARS_SAVE_PATH = os.path.join(BASE_DIR, "media", "avatars")
+
+# 富文本编辑器图片上传地址
+POST_SAVE_PATH = os.path.join(BASE_DIR, "media", "post")
