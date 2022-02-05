@@ -180,3 +180,11 @@ def register():
             return restful.ok()
         else:
             return restful.params_error(form.messages[0])
+
+
+@bp.route('/post/public', methods=['GET', 'POST'])
+def public_post():
+    # 发布贴子
+    if request.method == 'GET':
+        boards = BoardModel.query.order_by(BoardModel.priority.desc()).all()
+        return render_template('front/public_post.html', boards=boards)
