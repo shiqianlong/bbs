@@ -1,4 +1,5 @@
 import config
+import commands
 from flask import Flask
 from flask_migrate import Migrate
 from exts import db, mail, cache, csrf, avatars
@@ -24,6 +25,10 @@ migrate = Migrate(app, db)
 # 注册蓝图
 app.register_blueprint(front_bp)
 app.register_blueprint(media_bp)
+
+# 注册命令
+app.cli.command('greet')(commands.greet)
+app.cli.command('init_board')(commands.init_boards)
 
 if __name__ == '__main__':
     app.run()
