@@ -29,7 +29,7 @@ from .forms import (
     PublicPostForm
 )
 from models.auth import UserModel
-from models.post import BoardModel, PostModel
+from models.post import BoardModel, PostModel, CommentModel
 from .decorators import login_required
 
 bp = Blueprint('front', __name__, url_prefix='/')
@@ -231,3 +231,19 @@ def post_image_upload():
              'data': [{'url': url_for('media.get_post_image', filename=filename), 'alt': filename, 'href': ''}]})
     else:
         return restful.params_error(message=form.messages[0])
+
+
+@bp.get('/post/detail/<int:post_id>')
+def post_detail(post_id):
+    try:
+        post_model = PostModel.query.get(post_id)
+    except Exception as e:
+        return '404'
+    if not post_model:
+        return '<h1>404您的文章不存在！</h1>'
+    comment_count = CommentModel.query.filter_by(post_id=post_id).count()
+    context = {
+        'post': post_model,
+        'comment_count': comment_count
+    }
+    return render_template('front/post_detail.html', **context)
