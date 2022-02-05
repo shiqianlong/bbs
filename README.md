@@ -12,3 +12,6 @@
 
 ## CSRF攻击防御
 `pip install flask-wtf`
+
+## 富文本编辑器使用
+网址：`https://www.wangeditor.com/`
