@@ -21,6 +21,7 @@ from utils import restful
 from utils.captcha import Captcha
 from .forms import RegisterForm, LoginForm, UploadImageForm, ProfileEditForm
 from models.auth import UserModel
+from models.post import BoardModel
 from .decorators import login_required
 
 bp = Blueprint('front', __name__, url_prefix='/')
@@ -91,7 +92,8 @@ def logout():
 
 @bp.route('/')
 def index():
-    return render_template('front/index.html')
+    boards = BoardModel.query.order_by(BoardModel.priority.desc()).all()
+    return render_template('front/index.html', boards=boards)
 
 
 @bp.route('/graph/captcha')
