@@ -20,6 +20,11 @@ class BaseForm(Form):
         return message_list
 
 
+class ProfileEditForm(BaseForm):
+    """个人设置页面信息编辑校验"""
+    signature = StringField(validators=[Length(min=1, max=50, message="个性签名长度在1-50字之间！")])
+
+
 class UploadImageForm(BaseForm):
     image = FileField(validators=[FileAllowed(['jpg', 'png', 'jpeg', ], message='图片格式不符合要求'),
                                   FileSize(max_size=1024 * 1024 * 3, message='图片最大不能超过3M')])

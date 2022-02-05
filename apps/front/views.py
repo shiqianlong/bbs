@@ -19,11 +19,24 @@ from flask_avatars import Identicon
 from exts import mail, cache, db
 from utils import restful
 from utils.captcha import Captcha
-from .forms import RegisterForm, LoginForm, UploadImageForm
+from .forms import RegisterForm, LoginForm, UploadImageForm, ProfileEditForm
 from models.auth import UserModel
 from .decorators import login_required
 
 bp = Blueprint('front', __name__, url_prefix='/')
+
+
+@bp.post('/profile/edit')
+@login_required
+def edit_profile():
+    form = ProfileEditForm(request.form)
+    if form.validate():
+        signature = form.signature.data
+        g.user.signature = signature
+        db.session.commit()
+        return restful.ok()
+    else:
+        return restful.params_error(message=form.messages[0])
 
 
 @bp.post('/avatar/upload')

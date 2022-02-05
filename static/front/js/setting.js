@@ -2,6 +2,34 @@ var SettingHandler = function () {
 
 };
 
+SettingHandler.prototype.listenSubmitEvent = function () {
+    $('#submit-btn').on('click', function (event) {
+        event.preventDefault();
+        var signature = $('#signagure-input').val();
+        if (!signature) {
+            alert('提交成功！');
+            return;
+        }
+        if (signature && (signature.length > 50 || signature.length < 2)) {
+            alert('签名长度必须在2~50字符之间！');
+            return;
+        }
+        zlajax.post({
+            url: '/profile/edit',
+            data: {
+                signature
+            },
+            success: function (result) {
+                if (result['code'] == 200) {
+                    alert('提交成功！')
+                } else {
+                    alert(result['message'])
+                }
+            }
+        })
+    })
+};
+
 SettingHandler.prototype.listenAvatarUploadEvent = function () {
     $("#avatar-input").on("change", function () {
         var image = this.files[0];
@@ -28,6 +56,7 @@ SettingHandler.prototype.listenAvatarUploadEvent = function () {
 
 SettingHandler.prototype.run = function () {
     this.listenAvatarUploadEvent();
+    this.listenSubmitEvent();
 };
 
 $(function () {
