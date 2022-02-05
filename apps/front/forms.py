@@ -72,3 +72,9 @@ class PublicPostForm(BaseForm):
     title = StringField(validators=[Length(1, 200, message='标题字符应在1~20之间')])
     content = StringField(validators=[InputRequired(message='文章内容是必传字段')])
     board_id = IntegerField(validators=[InputRequired(message='板块ID是必传字段')])
+
+
+class PublicCommentForm(BaseForm):
+    # 发布评论校验
+    content = StringField(validators=[Length(max=500, message='评论内容不超过500字符！'), InputRequired(message='未填写评论内容')])
+    post_id = IntegerField(validators=[InputRequired(message='post_id是必传字段')])

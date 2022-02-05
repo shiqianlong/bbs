@@ -26,7 +26,8 @@ from .forms import (
     LoginForm,
     UploadImageForm,
     ProfileEditForm,
-    PublicPostForm
+    PublicPostForm,
+    PublicCommentForm
 )
 from models.auth import UserModel
 from models.post import BoardModel, PostModel, CommentModel
@@ -247,3 +248,21 @@ def post_detail(post_id):
         'comment_count': comment_count
     }
     return render_template('front/post_detail.html', **context)
+
+
+@bp.post('/comment')
+@login_required
+def public_comment():
+    form = PublicCommentForm(request.form)
+    if form.validate():
+        content = form.content.data
+        post_id = form.post_id.data
+        post_model = PostModel.query.get(post_id)
+        if not post_model:
+            return restful.params_error(message='该贴子不存在')
+        comment = CommentModel(content=content, post_id=post_id, author_id=g.user.id)
+        db.session.add(comment)
+        db.session.commit()
+        return restful.ok()
+    else:
+        return restful.params_error(message=form.messages[0])
