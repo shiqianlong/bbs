@@ -2,7 +2,7 @@
 # FileName  : forms.py
 # Author    : shiqianlong
 from wtforms import Form, ValidationError
-from wtforms.validators import Email, Length, EqualTo
+from wtforms.validators import Email, Length, EqualTo, InputRequired
 from wtforms.fields import StringField, IntegerField, FileField
 from flask import request
 from flask_wtf.file import FileAllowed, FileSize
@@ -65,3 +65,10 @@ class RegisterForm(BaseForm):
         print('取出的图像验证码%s: ' % graph_captcha_redis)
         if not graph_captcha_redis or graph_captcha_redis.lower() != graph_captcha.lower():
             raise ValidationError(message='图像验证码错误')
+
+
+class PublicPostForm(BaseForm):
+    # 发布贴子校验
+    title = StringField(validators=[Length(1, 200, message='标题字符应在1~20之间')])
+    content = StringField(validators=[InputRequired(message='文章内容是必传字段')])
+    board_id = IntegerField(validators=[InputRequired(message='板块ID是必传字段')])

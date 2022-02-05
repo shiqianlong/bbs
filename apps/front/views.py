@@ -21,9 +21,15 @@ from flask_avatars import Identicon
 from exts import mail, cache, db
 from utils import restful
 from utils.captcha import Captcha
-from .forms import RegisterForm, LoginForm, UploadImageForm, ProfileEditForm
+from .forms import (
+    RegisterForm,
+    LoginForm,
+    UploadImageForm,
+    ProfileEditForm,
+    PublicPostForm
+)
 from models.auth import UserModel
-from models.post import BoardModel
+from models.post import BoardModel, PostModel
 from .decorators import login_required
 
 bp = Blueprint('front', __name__, url_prefix='/')
@@ -191,6 +197,22 @@ def public_post():
     if request.method == 'GET':
         boards = BoardModel.query.order_by(BoardModel.priority.desc()).all()
         return render_template('front/public_post.html', boards=boards)
+    else:
+        form = PublicPostForm(request.form)
+        if form.validate():
+            title = form.title.data
+            content = form.content.data
+            board_id = form.board_id.data
+            try:
+                board = BoardModel.query.get(board_id)
+            except Exception as e:
+                return restful.params_error(message='板块不存在！')
+            post_model = PostModel(title=title, content=content, board=board, author=g.user)
+            db.session.add(post_model)
+            db.session.commit()
+            return restful.ok(data={'id': post_model.id})
+        else:
+            return restful.params_error(message=form.messages[0])
 
 
 @bp.post('/post/image/upload')
