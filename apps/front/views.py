@@ -19,6 +19,7 @@ from flask import (
 from flask_mail import Message
 from flask_avatars import Identicon
 from flask_paginate import get_page_parameter, Pagination
+from sqlalchemy import func
 from exts import mail, cache, db
 from utils import restful
 from utils.captcha import Captcha
@@ -102,8 +103,17 @@ def logout():
 
 @bp.route('/')
 def index():
+    sort = request.args.get('st', type=int, default=1)
     boards = BoardModel.query.order_by(BoardModel.priority.desc()).all()
-    post_query = PostModel.query.order_by(PostModel.create_time.desc())
+    post_query = None
+    if sort == 1:
+        # 按照时间顺序将贴子降序排列
+        post_query = PostModel.query.order_by(PostModel.create_time.desc(), PostModel.id.desc())
+    else:
+        # 按照1.评论数量降序 2.贴子时间降序 将贴子降序排列
+        post_query = db.session.query(PostModel).outerjoin(CommentModel).group_by(PostModel.id).order_by(
+            func.count(CommentModel.id).desc(), PostModel.create_time.desc(), PostModel.id.desc())
+
     total = post_query.count()
     page = request.args.get(get_page_parameter(), type=int, default=1)
     start = (page - 1) * current_app.config['PER_PAGE_COUNT']
@@ -115,6 +125,7 @@ def index():
         'boards': boards,
         'posts': posts,
         'pagination': pagination,
+        'st': sort
     }
     return render_template('front/index.html', **context)
 
