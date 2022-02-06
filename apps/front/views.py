@@ -104,6 +104,7 @@ def logout():
 @bp.route('/')
 def index():
     sort = request.args.get('st', type=int, default=1)
+    board_id = request.args.get('bd', type=int, default=None)
     boards = BoardModel.query.order_by(BoardModel.priority.desc()).all()
     post_query = None
     if sort == 1:
@@ -113,7 +114,8 @@ def index():
         # 按照1.评论数量降序 2.贴子时间降序 将贴子降序排列
         post_query = db.session.query(PostModel).outerjoin(CommentModel).group_by(PostModel.id).order_by(
             func.count(CommentModel.id).desc(), PostModel.create_time.desc(), PostModel.id.desc())
-
+    if board_id:
+        post_query = post_query.filter(PostModel.board_id == board_id)
     total = post_query.count()
     page = request.args.get(get_page_parameter(), type=int, default=1)
     start = (page - 1) * current_app.config['PER_PAGE_COUNT']
@@ -125,7 +127,8 @@ def index():
         'boards': boards,
         'posts': posts,
         'pagination': pagination,
-        'st': sort
+        'st': sort,
+        'bd': board_id
     }
     return render_template('front/index.html', **context)
 
