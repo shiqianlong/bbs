@@ -18,6 +18,7 @@ from flask import (
 )
 from flask_mail import Message
 from flask_avatars import Identicon
+from flask_paginate import get_page_parameter, Pagination
 from exts import mail, cache, db
 from utils import restful
 from utils.captcha import Captcha
@@ -102,8 +103,20 @@ def logout():
 @bp.route('/')
 def index():
     boards = BoardModel.query.order_by(BoardModel.priority.desc()).all()
-    posts = PostModel.query.order_by(PostModel.create_time.desc()).all()
-    return render_template('front/index.html', boards=boards, posts=posts)
+    post_query = PostModel.query.order_by(PostModel.create_time.desc())
+    total = post_query.count()
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    start = (page - 1) * current_app.config['PER_PAGE_COUNT']
+    end = start + current_app.config['PER_PAGE_COUNT']
+    posts = post_query.slice(start, end)
+
+    pagination = Pagination(bs_version=3, page=page, total=total, prev_label='上一页', next_label='下一页')
+    context = {
+        'boards': boards,
+        'posts': posts,
+        'pagination': pagination,
+    }
+    return render_template('front/index.html', **context)
 
 
 @bp.route('/graph/captcha')

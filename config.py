@@ -58,3 +58,6 @@ AVATARS_SAVE_PATH = os.path.join(BASE_DIR, "media", "avatars")
 
 # 富文本编辑器图片上传地址
 POST_SAVE_PATH = os.path.join(BASE_DIR, "media", "post")
+
+# 每页展示贴子数量
+PER_PAGE_COUNT = 10

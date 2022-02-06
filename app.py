@@ -29,6 +29,7 @@ app.register_blueprint(media_bp)
 # 注册命令
 app.cli.command('greet')(commands.greet)
 app.cli.command('init_board')(commands.init_boards)
+app.cli.command('create_test_posts')(commands.create_test_posts)
 
 if __name__ == '__main__':
     app.run()

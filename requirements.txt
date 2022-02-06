@@ -27,3 +27,4 @@ flask-caching
 pillow
 email_validator
 flask-avatars
+flask-paginate

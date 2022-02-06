@@ -13,6 +13,9 @@
 ## CSRF攻击防御
 `pip install flask-wtf`
 
+## 分页实现
+flask-paginate
+
 ## 富文本编辑器使用
 网址：`https://www.wangeditor.com/`
 

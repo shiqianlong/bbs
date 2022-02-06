@@ -51,7 +51,8 @@
         <h3>发表评论</h3>
         <textarea name="comment" id="comment-textarea" style="width: 100%; resize:vertical;"></textarea>
         <div class="comment-btn-group">
-            <button class="btn btn-primary" id="comment-btn" data-post-id="{{ post.id }}" data-user-id="{{ user.id }}">
+            <button class="btn btn-primary" id="comment-btn" data-post-id="{{ post.id }}"
+                    data-user-id="{{ user.id if user else '' }}">
                 发表评论
             </button>
         </div>

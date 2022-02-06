@@ -9,6 +9,7 @@ $(function () {
         var user_id = $this.attr('data-user-id');
         if (!user_id) {
             alert('请先登录再发布评论！')
+            return;
         }
         zlajax.post({
             'url': '/comment',
