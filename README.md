@@ -20,7 +20,10 @@ flask-paginate
 网址：`https://www.wangeditor.com/`
 
 ## 代码高亮
-网址：`de`
+网址：`https://highlightjs.org/`
 
 ## jwt验证
 `pip install flask-jwt-extended`
+
+## 使用serializer实现ORM模型序列化
+SQLAlchemy-serializer

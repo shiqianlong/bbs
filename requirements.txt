@@ -28,3 +28,5 @@ pillow
 email_validator
 flask-avatars
 flask-paginate
+SQLAlchemy-serializer
+requests

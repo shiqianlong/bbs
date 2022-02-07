@@ -5,10 +5,12 @@ import shortuuid
 from exts import db
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy_serializer import SerializerMixin
 
 
-class UserModel(db.Model):
+class UserModel(db.Model, SerializerMixin):
     __tablename__ = 'user'
+    serialize_only = ('id', 'email', 'username', 'avatar', 'signature', 'join_time', 'is_staff', 'is_active')
     id = db.Column(db.String(100), primary_key=True, default=shortuuid.uuid)
     email = db.Column(db.String(50), unique=True, nullable=False)
     username = db.Column(db.String(50), nullable=False)

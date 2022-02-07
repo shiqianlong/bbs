@@ -195,9 +195,11 @@ def login():
                 session.permanent = True
             session['user_id'] = user.id
             token = ''
+            user_dict = ''
             if user.is_staff:
                 token = create_access_token(identity=user.id)
-            return restful.ok(data={'token': token})
+                user_dict = user.to_dict()
+            return restful.ok(data={'token': token, 'user': user_dict})
         else:
             return restful.permission_error(message=form.messages[0])
 
