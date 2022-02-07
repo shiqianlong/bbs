@@ -18,6 +18,8 @@ LoginHandle.prototype.listenLoginEvent = function () {
             },
             success: function (result) {
                 if (result['code'] == 200) {
+                    var token = result['data']['token'];
+                    localStorage.setItem('JWT_TOKEN_KEY', token);
                     window.location = '/'
                 } else {
                     alert(result['message'])

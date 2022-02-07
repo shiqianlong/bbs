@@ -19,6 +19,7 @@ from flask import (
 from flask_mail import Message
 from flask_avatars import Identicon
 from flask_paginate import get_page_parameter, Pagination
+from flask_jwt_extended import create_access_token
 from sqlalchemy import func
 from exts import mail, cache, db
 from utils import restful
@@ -193,7 +194,10 @@ def login():
             if remember == 1:
                 session.permanent = True
             session['user_id'] = user.id
-            return restful.ok()
+            token = ''
+            if user.is_staff:
+                token = create_access_token(identity=user.id)
+            return restful.ok(data={'token': token})
         else:
             return restful.permission_error(message=form.messages[0])
 

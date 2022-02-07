@@ -21,3 +21,6 @@ flask-paginate
 
 ## 代码高亮
 网址：`de`
+
+## jwt验证
+`pip install flask-jwt-extended`
